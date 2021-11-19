@@ -2,17 +2,13 @@ install.packages("dplyr")
 install.packages("caret")
 install.packages("fastDummies")
 install.packages("corrplot")
-<<<<<<< Updated upstream
 library(pROC)
 require(dplyr)
 require(caret)
-=======
-install.packages("pandas")
 library(pROC)
 require(dplyr)
 require(caret)
 require(pandas)
->>>>>>> Stashed changes
 require(fastDummies)
 
 test <- read.csv("~/BA749/test.csv")
@@ -25,8 +21,7 @@ colnames(train)
 # combine the datasets together using union
 df <- union_all(test, train)
 
-<<<<<<< Updated upstream
-=======
+
 # view total number of columns
 ncol(df)
 
@@ -35,7 +30,6 @@ colnames(df)
 df <- df[-c(1:2)]
 colnames(df)
 
->>>>>>> Stashed changes
 # view data types of df
 str(df)
 
@@ -47,17 +41,13 @@ head(df)
 # identify near zero variance predictors
 nzv <- nearZeroVar(df, saveMetrics = TRUE, names = TRUE) # departure delay and arrival delay 
 dim(df)
-<<<<<<< Updated upstream
-=======
 colnames(df)
 
->>>>>>> Stashed changes
 # remove near zero variance predictors
 nzv <- nearZeroVar(df)
 df <- df[,-nzv]
 dim(df)
 
-<<<<<<< Updated upstream
 # identify highly correlated predictors
 install.packages("corrgram")
 library(corrgram)
@@ -72,7 +62,6 @@ hi_corr <- findCorrelation(corr_df, cutoff = .7)
 hi_corr
 # remove predictor
 df <- df[,-hi_corr]
-=======
 #total number of columns after removing predictors
 ncol(df)
 colnames(df) # return column names of new dataframe
@@ -114,6 +103,5 @@ print(df_proc_norm)
 df_normalized_post <- predict(df_proc_norm, df)
 summary(df_normalized_post)
 df_normalized_post
->>>>>>> Stashed changes
 
 
