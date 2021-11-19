@@ -8,7 +8,6 @@ require(caret)
 library(pROC)
 require(dplyr)
 require(caret)
-require(pandas)
 require(fastDummies)
 
 test <- read.csv("~/BA749/test.csv")
@@ -52,31 +51,12 @@ dim(df)
 install.packages("corrgram")
 library(corrgram)
 descCor <- cor(df)
-corrgram(df, lower.panel=panel.shade,
-         upper.panel=panel.pie)
-library(corrplot)
-corr_df <- cor(df)
-corrplot(corr_df, method = "color", type = "upper", tl.srt=45, tl.col="black")
-# calculate significant correlations with cutoff = .7
-hi_corr <- findCorrelation(corr_df, cutoff = .7)
-hi_corr
-# remove predictor
-df <- df[,-hi_corr]
-#total number of columns after removing predictors
-ncol(df)
-colnames(df) # return column names of new dataframe
-
-# identify highly correlated predictors
-install.packages("corrgram")
-library(corrgram)
-
-# create correlation visual
-descCor <- cor(df)
-# corrgram(df, lower.panel=panel.shade, upper.panel=panel.pie)
+#corrgram(df, lower.panel=panel.shade,
+#         upper.panel=panel.pie)
 
 library(corrplot)
 corr_df <- cor(df)
-corrplot(corr_df, method = "color", type = "upper", tl.srt=45, tl.col="black")
+#corrplot(corr_df, method = "color", type = "upper", tl.srt=45, tl.col="black")
 
 
 # calculate significant correlations with cutoff = .7
@@ -103,5 +83,27 @@ print(df_proc_norm)
 df_normalized_post <- predict(df_proc_norm, df)
 summary(df_normalized_post)
 df_normalized_post
+
+## PCA on predictors
+# remove response variable
+df1 <- df
+df1$satisfaction_satisfied <- NULL
+
+#PCA
+df.out <- prcomp(df1, scale=TRUE)
+names(df.out)
+df.out$center
+df.out$scale
+df.out$rotation # PCA loadings
+df.var <- df.out$sdev^2
+df.var
+pve <- df.var/sum(df.var)
+pve
+plot(pve, xlab="Principal Component", ylab="Proportion of Variance Explained",
+     ylim=c(0,1), type="b")
+plot(cumsum(pve), xlab="Principal Component", ylab="Proportion of Variance Explained",
+     ylim=c(0,1), type="b")
+summary(df.out)
+
 
 
