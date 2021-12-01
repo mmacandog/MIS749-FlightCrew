@@ -42,7 +42,7 @@ nzv <- nearZeroVar(df, saveMetrics = TRUE, names = TRUE) # departure delay and a
 dim(df)
 colnames(df)
 
-# remove near zero variance predictors
+# remove near zero variance predictors (arrival delay and departure delay)
 nzv <- nearZeroVar(df)
 df <- df[,-nzv]
 dim(df)
@@ -104,6 +104,8 @@ plot(pve, xlab="Principal Component", ylab="Proportion of Variance Explained",
 plot(cumsum(pve), xlab="Principal Component", ylab="Proportion of Variance Explained",
      ylim=c(0,1), type="b")
 summary(df.out)
+
+write.csv(df, file="mis749_cleaned.csv", row.names=TRUE)
 
 
 
