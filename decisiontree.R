@@ -6,12 +6,12 @@ library(rpart.plot)
 library(dplyr)
 library(caret)
 
-data <- read.csv("mis749_cleaned2.csv")
+data <- read.csv("mis749_cleaned.csv")
 
-#remove missing data will leave factors alone (trees can handle them)
+#remove x column
 data$X <- NULL
 
-### Sample only 15k ###
+#sample only 15000
 set.seed(199)
 data <- sample_n(data, 15000)
 
@@ -21,7 +21,7 @@ data.ctree
 plot(data.ctree)
 text(data.ctree, pretty=0)
 
-#try rpqrt.plot for better visual
+#try rpqrt.plot for better visuals
 rpart.plot(data.ctree)
 
 #display and plot cross-validated error for each tree size
@@ -72,7 +72,7 @@ predict_forest
 table_forest <- table(data$satisfaction_satisfied, predict_forest)
 confusionMatrix(table_forest)
 
-#lets try BOOSTING, creating sequential trees based on residuals
+#Boosting: creating sequential trees based on residuals
 library(gbm)
 set.seed(199)
 
@@ -82,10 +82,11 @@ data.boost <- gbm(satisfaction_satisfied ~ ., data=data)
 data.boost
 
 
-#lets use caret to parameter tune and find test performance estimation
+
+#parameter tune and find test performance estimation
 library(caret)
 
-#lets use caret, lasso regression with polynomials to find optimal degrees
+#find optimal degrees
 ctrl <- trainControl(method="cv", number=10)
 
 #smooth spline regression
@@ -96,6 +97,21 @@ gam.train <- train(satisfaction_satisfied ~ ., data=data,
                    method="gamSpline",tuneLength=10,
                    trControl=ctrl)
 gam.train
+
+#gam model extra tuning
+gam.train
+plot(gam.train)
+gam.grid <- expand.grid(df=seq(1.7,2.2,by=.01))
+set.seed(199)
+gam.train.round2 <- train(satisfaction_satisfied ~ ., data=data, 
+                          method="gamSpline",tuneGrid=gam.grid,
+                          trControl=ctrl)
+gam.train.round2
+
+getTrainPerf(gam.train.round2)
+
+getTrainPerf(gam.train)
+
 
 #decision tree
 set.seed(199)
@@ -123,7 +139,7 @@ rf.train
 set.seed(199)
 boost.train <- train(satisfaction_satisfied ~ ., data=data, 
                      method="gbm",tuneLength=10,
-                     trControl=ctrl)
+                     trControl=ctrl, train.fraction = 0.5)
 boost.train
 plot(boost.train)
 
@@ -136,7 +152,7 @@ boost.grid<- expand.grid(n.trees=seq(5,100,by=5), interaction.depth=7,
 set.seed(199)
 boost.train.round2 <- train(satisfaction_satisfied ~ ., data=data, 
                      method="gbm",tuneGrid=boost.grid,
-                     trControl=ctrl)
+                     trControl=ctrl,train.fraction = 0.5)
 boost.train.round2
 
 getTrainPerf(boost.train.round2)
@@ -144,22 +160,7 @@ getTrainPerf(boost.train.round2)
 getTrainPerf(boost.train)
 
 
-#gam model extra tuning
-gam.train
-plot(gam.train)
-gam.grid <- expand.grid(df=seq(1.7,2.2,by=.01))
-set.seed(199)
-gam.train.round2 <- train(satisfaction_satisfied ~ ., data=data, 
-                   method="gamSpline",tuneGrid=gam.grid,
-                   trControl=ctrl)
-gam.train.round2
-
-getTrainPerf(gam.train.round2)
-
-getTrainPerf(gam.train)
-
-#lets gather the models
-#first lets put all trained models in a list object
+#gather the models
 models<- list("gam" = gam.train, "DT"=rpart.train,
               "BaggingTree"=bag.train, "RF"=rf.train,
               "BoostingTree" = boost.train, 
@@ -168,3 +169,7 @@ models<- list("gam" = gam.train, "DT"=rpart.train,
 
 data.resamples<- resamples(models)
 summary(data.resamples)
+
+#plot performances
+bwplot(data.resamples, metric="RMSE")
+bwplot(data.resamples, metric="Rsquared")
