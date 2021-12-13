@@ -57,6 +57,20 @@ predict_bag
 table_bag <- table(data$satisfaction_satisfied, predict_bag)
 confusionMatrix(table_bag)
 
+#visualize the importance of the predictor variables by calculating the total reduction in RSS 
+#the larger the value, the more important the predictor
+VI <- data.frame(var=names(data[,-1]), imp=varImp(data.bag))
+
+#sort variable importance descending
+VI_plot <- VI[order(VI$Overall, decreasing=TRUE),]
+
+#visualize variable importance with horizontal bar plot
+barplot(VI_plot$Overall,
+        names.arg=rownames(VI_plot),
+        horiz=TRUE,
+        col='steelblue',
+        xlab='Variable Importance')
+
 #random forest
 library(randomForest)
 set.seed(199)
