@@ -48,31 +48,31 @@ nzv <- nearZeroVar(df)
 df <- df[,-nzv]
 dim(df)
 
+# scale predictors to normalize
+#df[16:21] <- as.factor(df[16:21])
+df_Scale<- preProcess(df[1:21], method=c("center", "scale"))
+df[1:21] <- predict(df_Scale, df[1:21])
+df
+summary(df)
+
 # identify highly correlated predictors
 install.packages("corrgram")
 library(corrgram)
 descCor <- cor(df)
-#corrgram(df, lower.panel=panel.shade,
-#         upper.panel=panel.pie)
+corrgram(df, lower.panel=panel.shade,
+         upper.panel=panel.pie)
 
 library(corrplot)
 corr_df <- cor(df)
-#corrplot(corr_df, method = "color", type = "upper", tl.srt=45, tl.col="black")
+corr_plot <- corrplot(corr_df, method = "color", type = "upper", title="Correlation between predictors", order="alphabet", tl.cex=1, tl.srt=45, tl.col="black")
 
 
 # calculate significant correlations with cutoff = .7
-hi_corr <- findCorrelation(corr_df, cutoff = .7, names = TRUE)
+hi_corr <- findCorrelation(corr_df, cutoff = .65, names = TRUE)
 hi_corr # no significant correlations
 
 # linear dependencies
 findLinearCombos(df) # none
-
-# scale predictors to normalize
-#df[16:21] <- as.factor(df[16:21])
-df[1:21]<- preProcess(df[1:21], method=c("center", "scale"))
-df[1:21] <- predict(df_proc_values, df[1:21])
-df
-summary(df)
 
 
 #PCA
