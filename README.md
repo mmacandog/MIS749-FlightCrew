@@ -1,6 +1,7 @@
 # BA749-FlightCrew
 
-Executive Summary
+<b> Executive Summary </b>
+
 The application of data science in the domains of consumer behavior has potential of great value for customer facing companies. Airlines, which already have vast data collection protocols, would benefit greatly in applying these practices to gain valuable insights on customer behavior. For this reason, we hypothesize that there may be valuable variables, such as on-board service, amenities, and airport features, that may greatly influence a customer’s satisfaction or dissatisfaction in their flight experience.
 
 We retrieved our dataset titled “Airline Passenger Satisfaction” from Kaggle. We first conducted data cleaning by removing null values, missing observations, or rows with 0. During preprocessing, we began by creating dummy variables, identifying and removing predictors with near zero variance (departure delay and arrival delay), scaled and centered the dataset to the same unit, and aimed to remove highly correlated variables over .7, but found none. One of the classes for our response variable, which was originally labeled as “neutral or dissatisfied”, was changed to dissatisfied to simplify interpretation and analysis.
