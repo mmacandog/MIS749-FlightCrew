@@ -11,4 +11,4 @@ The following classification analyses were applied: Logistic Regression, Linear 
 
 For the full report, please message Joseline: https://github.com/joseliine or Marrion: https://github.com/mmacandog.
 
-Tableau Visualization Dashboard: https://public.tableau.com/views/AirlineCustomerSatisfaction_16456890973030/Dashboard1?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link
+Tableau Dashboard: https://public.tableau.com/views/AirlineCustomerSatisfaction_16456890973030/Dashboard1?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link
